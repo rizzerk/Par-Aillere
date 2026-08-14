@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Seller {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+}
+
+model Batch {
+  id            String   @id @default(cuid())
+  code          String
+  isOpen        Boolean  @default(true)
+  cutoffLabel   String
+  deliveryLabel String
+  minOrder      Int      @default(4)
+  createdAt     DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+enum ProductCategory {
+  FILLED
+  NO_FILLING
+}
+
+model Product {
+  id        String           @id @default(cuid())
+  slug      String           @unique
+  name      String
+  price     Int
+  stock     Int              @default(0)
+  planned   Int              @default(0)
+  active    Boolean          @default(true)
+  category  ProductCategory  @default(FILLED)
+  allergens String[]
+  blurb     String
+  longDesc  String
+  photoUrl  String?
+  createdAt DateTime         @default(now())
+
+  orderItems OrderItem[]
+}
+
+enum FulfilMethod {
+  PICKUP
+  MAXIM
+}
+
+enum PayMethod {
+  GCASH
+  GOTYME
+  CASH
+}
+
+enum PayStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  ON_PICKUP
+}
+
+enum OrderStatus {
+  TO_BAKE
+  BAKING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id            String       @id @default(cuid())
+  ref           String       @unique
+  batchCode     String
+  customerName  String
+  phone         String
+  social        String
+  notes         String       @default("")
+  fulfilMethod  FulfilMethod
+  address       String?
+  payMethod     PayMethod
+  payRef        String?
+  proofUrl      String?
+  payStatus     PayStatus
+  orderStatus   OrderStatus  @default(TO_BAKE)
+  rejectReason  String       @default("")
+  createdAt     DateTime     @default(now())
+
+  items OrderItem[]
+
+  @@index([ref])
+  @@index([batchCode])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName String
+  qty         Int
+  unitPrice   Int
+}
+
+model Counter {
+  id      String @id @default("ref")
+  nextRef Int    @default(843)
+}
+
+model Settings {
+  id                 String  @id @default("singleton")
+  gcashAccountName   String  @default("Par A. (Aillere Bakes)")
+  gcashAccountNumber String  @default("0917 000 0000")
+  gotymeAccountName  String  @default("Par A. (Aillere Bakes)")
+  gotymeAccountNumber String @default("0117 4482 0091")
+  gcashQrUrl         String?
+  gotymeQrUrl        String?
+  heroImageUrl       String?
+  aboutImageUrl      String?
+}
