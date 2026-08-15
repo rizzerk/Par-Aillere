@@ -22,9 +22,9 @@ const jbMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Par Aillere — Homemade Artisan Bakes",
+  title: "Par Aillere — Homemade Artisan",
   description:
-    "Thick, filled treats made in small batches. Baked to order.",
+    "Thick, filled bites made in small batches. Baked to order.",
 };
 
 export default function RootLayout({

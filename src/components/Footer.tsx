@@ -6,7 +6,7 @@ export function Footer({ minOrder }: { minOrder: number }) {
       <SplashSheen src="/assets/splash-a.png" />
       <span className="relative font-script text-2xl text-cream">Par Aillere</span>
       <span className="relative font-mono text-[13px] tracking-[0.1em]">
-        Homemade artisan treats &middot; Minimum order of {minOrder} &middot; Pick up or
+        Homemade artisan bites &middot; Minimum order of {minOrder} &middot; Pick up or
         Maxim only
       </span>
     </div>

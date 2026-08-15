@@ -185,13 +185,16 @@ export function StorefrontClient({
             Baked to order · Cebu City
           </div>
           <h1 className="mt-5 font-serif text-5xl leading-[1.02] font-light lg:text-7xl">
-            Thick, filled treats
+            Thick, filled bites
             <br />
             <em className="text-blush not-italic italic">made in small batches.</em>
           </h1>
           <p className="mt-6 max-w-md text-lg leading-relaxed font-light text-cream/90">
             Cookies with a molten centre, brownies cut thick and fudgy — folded and baked
             by hand the night before you eat them.
+          </p>
+          <p className="mt-2 max-w-md font-mono text-sm text-cream/60 italic">
+            P.S. — you say it &ldquo;Pah-Ehy-Ehr.&rdquo;
           </p>
           <div className="mt-9 flex items-center gap-3.5">
             <Link
