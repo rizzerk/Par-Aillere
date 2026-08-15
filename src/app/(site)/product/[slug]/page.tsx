@@ -51,7 +51,7 @@ export default async function ProductPage({
                     }}
                   />
                   <span className="relative font-mono text-sm text-ink/66">
-                    [ cookie photo — {product.name.toLowerCase()} ]
+                    [ product photo — {product.name.toLowerCase()} ]
                   </span>
                 </>
               )}
@@ -59,7 +59,7 @@ export default async function ProductPage({
           </div>
           <div>
             <div className="text-sm tracking-[0.4em] text-rust uppercase">
-              {CATEGORY_LABELS[product.category]}
+              {product.type} &middot; {CATEGORY_LABELS[product.category]}
             </div>
             <h1 className="mt-3.5 text-5xl leading-[1.05] font-light lg:text-6xl">
               {product.name}

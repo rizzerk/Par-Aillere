@@ -37,6 +37,7 @@ model Product {
   id        String           @id @default(cuid())
   slug      String           @unique
   name      String
+  type      String           @default("Cookies")
   price     Int
   stock     Int              @default(0)
   planned   Int              @default(0)
@@ -49,6 +50,8 @@ model Product {
   createdAt DateTime         @default(now())
 
   orderItems OrderItem[]
+
+  @@index([type])
 }
 
 enum FulfilMethod {

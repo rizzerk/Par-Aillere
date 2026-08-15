@@ -39,6 +39,9 @@ export function ProductCard({ product }: { product: Product }) {
         </span>
       </Link>
       <div className="flex flex-1 flex-col gap-2.5 px-5 pt-5 pb-6">
+        <span className="font-mono text-[12px] tracking-[0.16em] text-ink/50 uppercase">
+          {product.type}
+        </span>
         <div className="flex items-baseline justify-between gap-3">
           <Link href={`/product/${product.slug}`}>
             <h3 className="m-0 text-2xl font-normal">{product.name}</h3>

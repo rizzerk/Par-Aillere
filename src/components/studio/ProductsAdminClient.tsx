@@ -5,18 +5,21 @@ import type { Product } from "@prisma/client";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { Input } from "@/components/ui";
 import { InlineNumberField } from "@/components/studio/InlineNumberField";
+import { InlineTextField } from "@/components/studio/InlineTextField";
 import { PhotoUploadButton } from "@/components/studio/PhotoUploadButton";
 import Image from "next/image";
 
 type Actions = {
   addProduct: (input: {
     name: string;
+    type: string;
     price: number;
     stock: number;
     blurb: string;
   }) => Promise<void>;
   updateProductPrice: (id: string, price: number) => Promise<void>;
   updateProductStock: (id: string, stock: number) => Promise<void>;
+  updateProductType: (id: string, type: string) => Promise<void>;
   toggleProductActive: (id: string) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   updateProductPhoto: (id: string, url: string) => Promise<void>;
@@ -30,25 +33,33 @@ export function ProductsAdminClient({
   actions: Actions;
 }) {
   const [showNew, setShowNew] = useState(false);
-  const [draft, setDraft] = useState({ name: "", price: "", stock: "", blurb: "" });
+  const [draft, setDraft] = useState({ name: "", type: "", price: "", stock: "", blurb: "" });
   const [adding, setAdding] = useState(false);
+
+  const productTypes = [...new Set(products.map((p) => p.type))].sort();
 
   async function handleAdd() {
     if (!draft.name.trim() || adding) return;
     setAdding(true);
     await actions.addProduct({
       name: draft.name,
+      type: draft.type,
       price: parseInt(draft.price, 10) || 40,
       stock: parseInt(draft.stock, 10) || 12,
       blurb: draft.blurb,
     });
     setAdding(false);
-    setDraft({ name: "", price: "", stock: "", blurb: "" });
+    setDraft({ name: "", type: "", price: "", stock: "", blurb: "" });
     setShowNew(false);
   }
 
   return (
     <div className="relative mx-auto max-w-6xl overflow-hidden px-6 py-11 sm:px-10">
+      <datalist id="product-type-suggestions">
+        {productTypes.map((t) => (
+          <option key={t} value={t} />
+        ))}
+      </datalist>
       <Image
         src="/assets/flower-e.png"
         alt=""
@@ -59,7 +70,7 @@ export function ProductsAdminClient({
       <div className="relative flex flex-wrap items-end justify-between gap-8">
         <div>
           <div className="text-sm tracking-[0.4em] text-rust uppercase">Products</div>
-          <h1 className="mt-3 text-4xl font-light lg:text-5xl">Cookie catalogue</h1>
+          <h1 className="mt-3 text-4xl font-light lg:text-5xl">Product catalogue</h1>
         </div>
         <button
           type="button"
@@ -87,6 +98,17 @@ export function ProductsAdminClient({
                 value={draft.name}
                 onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
                 placeholder="Biscoff"
+              />
+            </label>
+            <label className="flex flex-col gap-1.75">
+              <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+                Type
+              </span>
+              <Input
+                value={draft.type}
+                onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value }))}
+                placeholder="Cookies"
+                list="product-type-suggestions"
               />
             </label>
             <label className="flex flex-col gap-1.75">
@@ -136,8 +158,9 @@ export function ProductsAdminClient({
       )}
 
       <div className="relative mt-7.5 overflow-x-auto border border-ink/14 bg-cream-card">
-        <div className="grid min-w-[720px] grid-cols-[2.1fr_0.9fr_0.9fr_1fr_1.3fr] gap-4.5 bg-cream-warm px-6.5 py-4 text-[13px] tracking-[0.2em] text-ink/74 uppercase">
+        <div className="grid min-w-[840px] grid-cols-[1.8fr_1fr_0.8fr_0.8fr_1fr_1.3fr] gap-4.5 bg-cream-warm px-6.5 py-4 text-[13px] tracking-[0.2em] text-ink/74 uppercase">
           <div>Flavour</div>
+          <div>Type</div>
           <div>Price</div>
           <div>Stock</div>
           <div>Status</div>
@@ -146,7 +169,7 @@ export function ProductsAdminClient({
         {products.map((p) => (
           <div
             key={p.id}
-            className="grid min-w-[720px] grid-cols-[2.1fr_0.9fr_0.9fr_1fr_1.3fr] items-center gap-4.5 border-t border-ink/10 px-6.5 py-4"
+            className="grid min-w-[840px] grid-cols-[1.8fr_1fr_0.8fr_0.8fr_1fr_1.3fr] items-center gap-4.5 border-t border-ink/10 px-6.5 py-4"
           >
             <div className="flex items-center gap-4">
               <div
@@ -167,6 +190,12 @@ export function ProductsAdminClient({
                 </div>
               </div>
             </div>
+            <InlineTextField
+              id={p.id}
+              value={p.type}
+              onSave={actions.updateProductType}
+              listId="product-type-suggestions"
+            />
             <InlineNumberField id={p.id} value={p.price} onSave={actions.updateProductPrice} />
             <InlineNumberField id={p.id} value={p.stock} onSave={actions.updateProductStock} />
             <button

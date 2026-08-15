@@ -66,11 +66,11 @@ export const FAQS = [
   },
   {
     q: "Is there a minimum order?",
-    a: "Four cookies, and you can mix any flavours to get there.",
+    a: "Four pieces, and you can mix any flavours — cookies, brownies, or whatever else is on the menu — to get there.",
   },
   {
     q: "What about allergens?",
-    a: "Every cookie contains wheat and dairy; most contain egg and some contain soy. The kitchen also handles nuts, so we can't guarantee a nut-free cookie.",
+    a: "Every item contains wheat and dairy; most contain egg and some contain soy. The kitchen also handles nuts, so we can't guarantee anything nut-free.",
   },
   {
     q: "How do I pay?",

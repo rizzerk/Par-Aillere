@@ -22,6 +22,7 @@ function slugify(name: string) {
 
 export async function addProduct(input: {
   name: string;
+  type: string;
   price: number;
   stock: number;
   blurb: string;
@@ -36,11 +37,13 @@ export async function addProduct(input: {
   const stock = Number.isFinite(input.stock) ? Math.max(0, Math.round(input.stock)) : 12;
   const price = Number.isFinite(input.price) ? Math.max(0, Math.round(input.price)) : 40;
   const blurb = input.blurb.trim() || "Filled, 45g dough";
+  const type = input.type.trim() || "Cookies";
 
   await prisma.product.create({
     data: {
       slug,
       name: input.name.trim(),
+      type,
       price,
       stock,
       planned: stock,
@@ -55,6 +58,15 @@ export async function addProduct(input: {
   revalidatePath("/studio/products");
   revalidatePath("/studio/batch");
   revalidatePath("/studio/stock");
+  revalidatePath("/");
+}
+
+export async function updateProductType(id: string, type: string) {
+  await requireSeller();
+  const trimmed = type.trim();
+  if (!trimmed) return;
+  await prisma.product.update({ where: { id }, data: { type: trimmed } });
+  revalidatePath("/studio/products");
   revalidatePath("/");
 }
 

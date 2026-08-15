@@ -34,6 +34,7 @@ async function main() {
     {
       slug: "smores",
       name: "S'mores",
+      type: "Cookies",
       price: 45,
       stock: 6,
       planned: 24,
@@ -46,6 +47,7 @@ async function main() {
     {
       slug: "espresso",
       name: "Espresso",
+      type: "Cookies",
       price: 42,
       stock: 14,
       planned: 18,
@@ -58,6 +60,7 @@ async function main() {
     {
       slug: "dark-chocolate",
       name: "Dark Chocolate",
+      type: "Cookies",
       price: 40,
       stock: 20,
       planned: 20,
@@ -70,6 +73,7 @@ async function main() {
     {
       slug: "oreo",
       name: "Oreo Cookie",
+      type: "Cookies",
       price: 38,
       stock: 3,
       planned: 16,
@@ -82,6 +86,7 @@ async function main() {
     {
       slug: "classic-chocolate-chip",
       name: "Classic Chocolate Chip",
+      type: "Cookies",
       price: 32,
       stock: 26,
       planned: 30,
@@ -90,6 +95,32 @@ async function main() {
       blurb: "The plain one, done properly. Chilled overnight.",
       longDesc:
         "Brown-butter dough rested overnight, chocolate chips only. The one we judge every other batch against.",
+    },
+    {
+      slug: "fudge-brownie",
+      name: "Fudge Brownie",
+      type: "Brownies",
+      price: 55,
+      stock: 10,
+      planned: 16,
+      category: ProductCategory.NO_FILLING,
+      allergens: ["Gluten", "Dairy", "Egg"],
+      blurb: "Dense, fudgy, crackly top. Cut thick.",
+      longDesc:
+        "Slow-melted dark chocolate and butter, barely any flour. Baked until the edges set and the centre stays fudgy, then cut into thick squares.",
+    },
+    {
+      slug: "salted-caramel-brownie",
+      name: "Salted Caramel Brownie",
+      type: "Brownies",
+      price: 60,
+      stock: 8,
+      planned: 16,
+      category: ProductCategory.FILLED,
+      allergens: ["Gluten", "Dairy", "Egg"],
+      blurb: "Fudge brownie swirled with salted caramel through the centre.",
+      longDesc:
+        "The same slow-melted fudge brownie base, swirled with a salted caramel ribbon through the middle before baking. Finished with flaky salt on top.",
     },
   ];
 

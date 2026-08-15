@@ -47,6 +47,7 @@ export function StorefrontClient({
   const removeFromCart = useCartStore((s) => s.remove);
   const clearCart = useCartStore((s) => s.clear);
 
+  const [typeFilter, setTypeFilter] = useState("All");
   const [catFilter, setCatFilter] = useState<"All" | "FILLED" | "NO_FILLING">("All");
   const [freeFilter, setFreeFilter] = useState("All");
 
@@ -80,8 +81,10 @@ export function StorefrontClient({
   }, []);
 
   const live = products.filter((p) => p.active);
+  const productTypes = [...new Set(live.map((p) => p.type))].sort();
   const filtered = live.filter(
     (p) =>
+      (typeFilter === "All" || p.type === typeFilter) &&
       (catFilter === "All" || p.category === catFilter) &&
       (freeFilter === "All" || !p.allergens.includes(freeFilter))
   );
@@ -214,9 +217,9 @@ export function StorefrontClient({
               </div>
             </div>
             <div>
-              <div className="text-3xl font-light">45g</div>
+              <div className="text-3xl font-light">{live.length}</div>
               <div className="mt-1 text-sm tracking-[0.2em] text-gold uppercase">
-                Dough per cookie
+                Flavours this batch
               </div>
             </div>
             <div>
@@ -256,12 +259,29 @@ export function StorefrontClient({
           </div>
           <p className="max-w-md font-mono text-sm leading-loose text-ink/70">
             Orders for {batch.code} close {batch.cutoffLabel}. Baked for{" "}
-            {batch.deliveryLabel}. Minimum {batch.minOrder} cookies.
+            {batch.deliveryLabel}. Minimum {batch.minOrder} pieces.
           </p>
         </div>
 
         <div className="relative mt-7 flex flex-wrap items-center gap-5 border-t border-b border-ink/18 py-4.5">
-          <span className="text-[13px] tracking-[0.2em] text-ink/62 uppercase">Type</span>
+          {productTypes.length > 1 && (
+            <>
+              <span className="text-[13px] tracking-[0.2em] text-ink/62 uppercase">
+                Product
+              </span>
+              <div className="flex flex-wrap gap-2">
+                <Chip active={typeFilter === "All"} onClick={() => setTypeFilter("All")}>
+                  All
+                </Chip>
+                {productTypes.map((t) => (
+                  <Chip key={t} active={typeFilter === t} onClick={() => setTypeFilter(t)}>
+                    {t}
+                  </Chip>
+                ))}
+              </div>
+            </>
+          )}
+          <span className="text-[13px] tracking-[0.2em] text-ink/62 uppercase">Style</span>
           <div className="flex flex-wrap gap-2">
             {(["All", "FILLED", "NO_FILLING"] as const).map((c) => (
               <Chip key={c} active={catFilter === c} onClick={() => setCatFilter(c)}>
@@ -317,8 +337,8 @@ export function StorefrontClient({
               }
             >
               {minMet
-                ? `Minimum met — ${inCart} cookies in the box. Pick up or Maxim only.`
-                : `Minimum order is ${batch.minOrder} cookies. ${
+                ? `Minimum met — ${inCart} in the box. Pick up or Maxim only.`
+                : `Minimum order is ${batch.minOrder} pieces. ${
                     inCart === 0
                       ? "Pick your flavours above."
                       : `Add ${batch.minOrder - inCart} more.`
@@ -335,7 +355,7 @@ export function StorefrontClient({
                 {cartLines.length === 0 ? (
                   <div className="flex flex-wrap items-center justify-between gap-5 px-6 py-6">
                     <p className="m-0 text-lg font-light text-ink/70">
-                      Nothing in the box yet — minimum order is {batch.minOrder} cookies,
+                      Nothing in the box yet — minimum order is {batch.minOrder} pieces,
                       mix any flavours you like.
                     </p>
                     <Link
@@ -545,7 +565,7 @@ export function StorefrontClient({
                         </div>
                         <p className="mt-4 font-mono text-[13px] leading-loose text-ink/66">
                           Screenshot the receipt after paying — upload it below so we can
-                          reserve your cookies.
+                          reserve your box.
                         </p>
                       </div>
                     </div>
@@ -573,7 +593,7 @@ export function StorefrontClient({
                           placeholder="e.g. 0092 8471 2233"
                         />
                         <span className="font-mono text-[13px] leading-loose text-ink/66">
-                          We verify manually — your cookies are reserved once the proof
+                          We verify manually — your box is reserved once the proof
                           checks out.
                         </span>
                       </label>
@@ -635,7 +655,7 @@ export function StorefrontClient({
                     ? "Placing order…"
                     : minMet
                       ? "Place order"
-                      : `Minimum ${batch.minOrder} cookies`}
+                      : `Minimum ${batch.minOrder} pieces`}
                 </button>
                 <p className="mt-3.5 font-mono text-[13px] leading-loose text-blush/65">
                   {isCash
@@ -770,7 +790,7 @@ export function StorefrontClient({
           <div>
             <SectionLabel>About</SectionLabel>
             <h2 className="mt-4 text-4xl leading-tight font-light lg:text-5xl">
-              A small kitchen, five recipes, no shortcuts.
+              A small kitchen, {live.length} recipes, no shortcuts.
             </h2>
             <p className="mt-5 max-w-xl text-xl leading-relaxed font-light text-ink/75">
               Par Aillere started as a Sunday habit — one tray, too much dough,

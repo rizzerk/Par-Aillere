@@ -43,7 +43,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
 
   const totalQty = data.items.reduce((a, i) => a + i.qty, 0);
   if (totalQty < batch.minOrder) {
-    return { ok: false, error: `Minimum order is ${batch.minOrder} cookies.` };
+    return { ok: false, error: `Minimum order is ${batch.minOrder} pieces.` };
   }
 
   const productIds = data.items.map((i) => i.productId);

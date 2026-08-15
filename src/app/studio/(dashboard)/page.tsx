@@ -88,7 +88,7 @@ export default async function DashboardPage() {
         </Link>
         <div className="border border-ink/14 bg-cream-card p-5.5">
           <div className="text-[13px] tracking-[0.2em] text-rust uppercase">
-            Cookies to bake
+            Pieces to bake
           </div>
           <div className="mt-2 text-4xl font-light">{toBake}</div>
         </div>

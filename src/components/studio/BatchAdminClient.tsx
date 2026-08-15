@@ -151,7 +151,7 @@ export function BatchAdminClient({
               Stock for this batch
             </span>
             <span className="font-mono text-[13px] text-ink/62">
-              {planned} cookies planned
+              {planned} pieces planned
             </span>
           </div>
           {products.map((p) => (
