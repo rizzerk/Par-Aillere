@@ -12,6 +12,7 @@ export const CUSTOMER_NAV = [
 export const ADMIN_NAV = [
   { href: "/studio", label: "Dashboard" },
   { href: "/studio/products", label: "Products" },
+  { href: "/studio/types", label: "Types" },
   { href: "/studio/batch", label: "Batch" },
   { href: "/studio/stock", label: "Stock" },
   { href: "/studio/orders", label: "Orders" },

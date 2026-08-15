@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { Product } from "@prisma/client";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { Input } from "@/components/ui";
@@ -27,16 +28,16 @@ type Actions = {
 
 export function ProductsAdminClient({
   products,
+  productTypes,
   actions,
 }: {
   products: Product[];
+  productTypes: string[];
   actions: Actions;
 }) {
   const [showNew, setShowNew] = useState(false);
   const [draft, setDraft] = useState({ name: "", type: "", price: "", stock: "", blurb: "" });
   const [adding, setAdding] = useState(false);
-
-  const productTypes = [...new Set(products.map((p) => p.type))].sort();
 
   async function handleAdd() {
     if (!draft.name.trim() || adding) return;
@@ -71,6 +72,12 @@ export function ProductsAdminClient({
         <div>
           <div className="text-sm tracking-[0.4em] text-rust uppercase">Products</div>
           <h1 className="mt-3 text-4xl font-light lg:text-5xl">Product catalogue</h1>
+          <Link
+            href="/studio/types"
+            className="mt-2 inline-block text-[13px] tracking-[0.15em] text-rust uppercase"
+          >
+            Manage types →
+          </Link>
         </div>
         <button
           type="button"

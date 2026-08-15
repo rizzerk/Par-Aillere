@@ -33,6 +33,12 @@ enum ProductCategory {
   NO_FILLING
 }
 
+model ProductType {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
 model Product {
   id        String           @id @default(cuid())
   slug      String           @unique

@@ -124,6 +124,14 @@ async function main() {
     },
   ];
 
+  for (const typeName of new Set(products.map((p) => p.type))) {
+    await prisma.productType.upsert({
+      where: { name: typeName },
+      update: {},
+      create: { name: typeName },
+    });
+  }
+
   const productRecords: Record<string, string> = {};
   for (const p of products) {
     const rec = await prisma.product.upsert({

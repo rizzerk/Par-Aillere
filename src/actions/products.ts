@@ -39,6 +39,8 @@ export async function addProduct(input: {
   const blurb = input.blurb.trim() || "Filled, 45g dough";
   const type = input.type.trim() || "Cookies";
 
+  await prisma.productType.upsert({ where: { name: type }, update: {}, create: { name: type } });
+
   await prisma.product.create({
     data: {
       slug,
@@ -65,8 +67,14 @@ export async function updateProductType(id: string, type: string) {
   await requireSeller();
   const trimmed = type.trim();
   if (!trimmed) return;
+  await prisma.productType.upsert({
+    where: { name: trimmed },
+    update: {},
+    create: { name: trimmed },
+  });
   await prisma.product.update({ where: { id }, data: { type: trimmed } });
   revalidatePath("/studio/products");
+  revalidatePath("/studio/types");
   revalidatePath("/");
 }
 
