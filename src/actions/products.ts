@@ -26,6 +26,8 @@ export async function addProduct(input: {
   price: number;
   stock: number;
   blurb: string;
+  category: ProductCategory;
+  allergens: string[];
 }) {
   await requireSeller();
   if (!input.name.trim()) return;
@@ -50,8 +52,8 @@ export async function addProduct(input: {
       stock,
       planned: stock,
       active: true,
-      category: ProductCategory.FILLED,
-      allergens: ["Gluten", "Dairy", "Egg"],
+      category: input.category,
+      allergens: input.allergens,
       blurb,
       longDesc: blurb,
     },
@@ -105,6 +107,27 @@ export async function toggleProductActive(id: string) {
   await requireSeller();
   const p = await prisma.product.findUniqueOrThrow({ where: { id } });
   await prisma.product.update({ where: { id }, data: { active: !p.active } });
+  revalidatePath("/studio/products");
+  revalidatePath("/");
+}
+
+export async function updateProductDetails(
+  id: string,
+  input: {
+    blurb: string;
+    longDesc: string;
+    category: ProductCategory;
+    allergens: string[];
+  }
+) {
+  await requireSeller();
+  const blurb = input.blurb.trim();
+  const longDesc = input.longDesc.trim();
+  if (!blurb || !longDesc) return;
+  await prisma.product.update({
+    where: { id },
+    data: { blurb, longDesc, category: input.category, allergens: input.allergens },
+  });
   revalidatePath("/studio/products");
   revalidatePath("/");
 }

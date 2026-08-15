@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Product } from "@prisma/client";
-import { CATEGORY_LABELS } from "@/lib/constants";
-import { Input } from "@/components/ui";
+import { ProductCategory } from "@prisma/client";
+import { CATEGORY_LABELS, ALLERGEN_OPTIONS } from "@/lib/constants";
+import { Input, Textarea, Chip } from "@/components/ui";
 import { InlineNumberField } from "@/components/studio/InlineNumberField";
 import { InlineTextField } from "@/components/studio/InlineTextField";
 import { PhotoUploadButton } from "@/components/studio/PhotoUploadButton";
@@ -17,10 +18,21 @@ type Actions = {
     price: number;
     stock: number;
     blurb: string;
+    category: ProductCategory;
+    allergens: string[];
   }) => Promise<void>;
   updateProductPrice: (id: string, price: number) => Promise<void>;
   updateProductStock: (id: string, stock: number) => Promise<void>;
   updateProductType: (id: string, type: string) => Promise<void>;
+  updateProductDetails: (
+    id: string,
+    input: {
+      blurb: string;
+      longDesc: string;
+      category: ProductCategory;
+      allergens: string[];
+    }
+  ) => Promise<void>;
   toggleProductActive: (id: string) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   updateProductPhoto: (id: string, url: string) => Promise<void>;
@@ -36,8 +48,26 @@ export function ProductsAdminClient({
   actions: Actions;
 }) {
   const [showNew, setShowNew] = useState(false);
-  const [draft, setDraft] = useState({ name: "", type: "", price: "", stock: "", blurb: "" });
+  const [draft, setDraft] = useState({
+    name: "",
+    type: "",
+    price: "",
+    stock: "",
+    blurb: "",
+    category: ProductCategory.FILLED as ProductCategory,
+    allergens: ["Gluten", "Dairy", "Egg"] as string[],
+  });
   const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  function toggleDraftAllergen(a: string) {
+    setDraft((d) => ({
+      ...d,
+      allergens: d.allergens.includes(a)
+        ? d.allergens.filter((x) => x !== a)
+        : [...d.allergens, a],
+    }));
+  }
 
   async function handleAdd() {
     if (!draft.name.trim() || adding) return;
@@ -48,9 +78,19 @@ export function ProductsAdminClient({
       price: parseInt(draft.price, 10) || 40,
       stock: parseInt(draft.stock, 10) || 12,
       blurb: draft.blurb,
+      category: draft.category,
+      allergens: draft.allergens,
     });
     setAdding(false);
-    setDraft({ name: "", type: "", price: "", stock: "", blurb: "" });
+    setDraft({
+      name: "",
+      type: "",
+      price: "",
+      stock: "",
+      blurb: "",
+      category: ProductCategory.FILLED,
+      allergens: ["Gluten", "Dairy", "Egg"],
+    });
     setShowNew(false);
   }
 
@@ -152,15 +192,50 @@ export function ProductsAdminClient({
                 placeholder="Filled, 45g dough"
               />
             </label>
-            <button
-              type="button"
-              onClick={handleAdd}
-              disabled={adding || !draft.name.trim()}
-              className="cursor-pointer rounded-sm border-none bg-maroon px-6 py-3.5 text-[14px] tracking-[0.16em] whitespace-nowrap text-cream uppercase"
-            >
-              {adding ? "Adding…" : "Add"}
-            </button>
           </div>
+
+          <div className="mt-4.5 flex flex-wrap items-center gap-3.5">
+            <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+              Filling
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {(Object.values(ProductCategory) as ProductCategory[]).map((c) => (
+                <Chip
+                  key={c}
+                  active={draft.category === c}
+                  onClick={() => setDraft((d) => ({ ...d, category: c }))}
+                >
+                  {CATEGORY_LABELS[c]}
+                </Chip>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-3.5 flex flex-wrap items-center gap-3.5">
+            <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+              Contains
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {ALLERGEN_OPTIONS.map((a) => (
+                <Chip
+                  key={a}
+                  active={draft.allergens.includes(a)}
+                  onClick={() => toggleDraftAllergen(a)}
+                >
+                  {a}
+                </Chip>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={adding || !draft.name.trim()}
+            className="mt-4.5 cursor-pointer rounded-sm border-none bg-maroon px-6 py-3.5 text-[14px] tracking-[0.16em] whitespace-nowrap text-cream uppercase disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {adding ? "Adding…" : "Add"}
+          </button>
         </div>
       )}
 
@@ -174,66 +249,194 @@ export function ProductsAdminClient({
           <div className="text-right">Actions</div>
         </div>
         {products.map((p) => (
-          <div
-            key={p.id}
-            className="grid min-w-[840px] grid-cols-[1.8fr_1fr_0.8fr_0.8fr_1fr_1.3fr] items-center gap-4.5 border-t border-ink/10 px-6.5 py-4"
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className="h-11.5 w-11.5 flex-none overflow-hidden bg-cream-warm"
-                style={
-                  p.photoUrl
-                    ? { backgroundImage: `url(${p.photoUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
-                    : {
-                        backgroundImage:
-                          "repeating-linear-gradient(135deg, rgba(92,16,21,0.16) 0 6px, rgba(92,16,21,0.04) 6px 12px)",
-                      }
-                }
-              />
-              <div>
-                <div className={"text-xl " + (p.active ? "" : "opacity-45")}>{p.name}</div>
-                <div className="mt-0.5 font-mono text-[13px] text-ink/62">
-                  {CATEGORY_LABELS[p.category]} · {p.allergens.join(", ")}
+          <div key={p.id} className="border-t border-ink/10">
+            <div className="grid min-w-[840px] grid-cols-[1.8fr_1fr_0.8fr_0.8fr_1fr_1.3fr] items-center gap-4.5 px-6.5 py-4">
+              <div className="flex items-center gap-4">
+                <div
+                  className="h-11.5 w-11.5 flex-none overflow-hidden bg-cream-warm"
+                  style={
+                    p.photoUrl
+                      ? { backgroundImage: `url(${p.photoUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                      : {
+                          backgroundImage:
+                            "repeating-linear-gradient(135deg, rgba(92,16,21,0.16) 0 6px, rgba(92,16,21,0.04) 6px 12px)",
+                        }
+                  }
+                />
+                <div>
+                  <div className={"text-xl " + (p.active ? "" : "opacity-45")}>{p.name}</div>
+                  <div className="mt-0.5 font-mono text-[13px] text-ink/62">
+                    {CATEGORY_LABELS[p.category]} · {p.allergens.join(", ")}
+                  </div>
                 </div>
               </div>
-            </div>
-            <InlineTextField
-              id={p.id}
-              value={p.type}
-              onSave={actions.updateProductType}
-              listId="product-type-suggestions"
-            />
-            <InlineNumberField id={p.id} value={p.price} onSave={actions.updateProductPrice} />
-            <InlineNumberField id={p.id} value={p.stock} onSave={actions.updateProductStock} />
-            <button
-              type="button"
-              onClick={() => void actions.toggleProductActive(p.id)}
-              className={
-                "w-fit cursor-pointer rounded-full border px-3.5 py-1.75 text-[13px] tracking-[0.15em] uppercase " +
-                (p.active
-                  ? "border-maroon-deep/40 bg-maroon-deep text-cream"
-                  : "border-ink/20 bg-transparent text-ink/60")
-              }
-            >
-              {p.active ? "Live" : "Hidden"}
-            </button>
-            <div className="flex justify-end gap-2">
-              <PhotoUploadButton productId={p.id} onUploaded={actions.updateProductPhoto} />
+              <InlineTextField
+                id={p.id}
+                value={p.type}
+                onSave={actions.updateProductType}
+                listId="product-type-suggestions"
+              />
+              <InlineNumberField id={p.id} value={p.price} onSave={actions.updateProductPrice} />
+              <InlineNumberField id={p.id} value={p.stock} onSave={actions.updateProductStock} />
               <button
                 type="button"
-                onClick={() => {
-                  if (confirm(`Delete ${p.name}? This can't be undone.`)) {
-                    void actions.deleteProduct(p.id);
-                  }
-                }}
-                className="cursor-pointer rounded-sm border border-ink/25 bg-transparent px-3.5 py-2.25 text-[13px] tracking-[0.14em] whitespace-nowrap text-ink/70 uppercase"
+                onClick={() => void actions.toggleProductActive(p.id)}
+                className={
+                  "w-fit cursor-pointer rounded-full border px-3.5 py-1.75 text-[13px] tracking-[0.15em] uppercase " +
+                  (p.active
+                    ? "border-maroon-deep/40 bg-maroon-deep text-cream"
+                    : "border-ink/20 bg-transparent text-ink/60")
+                }
               >
-                Delete
+                {p.active ? "Live" : "Hidden"}
               </button>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingId((cur) => (cur === p.id ? null : p.id))}
+                  className={
+                    "cursor-pointer rounded-sm border px-3.5 py-2.25 text-[13px] tracking-[0.14em] whitespace-nowrap uppercase " +
+                    (editingId === p.id
+                      ? "border-maroon bg-maroon text-cream"
+                      : "border-ink/25 bg-transparent text-ink/70")
+                  }
+                >
+                  {editingId === p.id ? "Close" : "Details"}
+                </button>
+                <PhotoUploadButton productId={p.id} onUploaded={actions.updateProductPhoto} />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm(`Delete ${p.name}? This can't be undone.`)) {
+                      void actions.deleteProduct(p.id);
+                    }
+                  }}
+                  className="cursor-pointer rounded-sm border border-ink/25 bg-transparent px-3.5 py-2.25 text-[13px] tracking-[0.14em] whitespace-nowrap text-ink/70 uppercase"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
+            {editingId === p.id && (
+              <DetailsEditor
+                product={p}
+                onSave={actions.updateProductDetails}
+                onDone={() => setEditingId(null)}
+              />
+            )}
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function DetailsEditor({
+  product,
+  onSave,
+  onDone,
+}: {
+  product: Product;
+  onSave: (
+    id: string,
+    input: {
+      blurb: string;
+      longDesc: string;
+      category: ProductCategory;
+      allergens: string[];
+    }
+  ) => Promise<void>;
+  onDone: () => void;
+}) {
+  const [blurb, setBlurb] = useState(product.blurb);
+  const [longDesc, setLongDesc] = useState(product.longDesc);
+  const [category, setCategory] = useState<ProductCategory>(product.category);
+  const [allergens, setAllergens] = useState<string[]>(product.allergens);
+  const [saving, setSaving] = useState(false);
+
+  function toggleAllergen(a: string) {
+    setAllergens((cur) => (cur.includes(a) ? cur.filter((x) => x !== a) : [...cur, a]));
+  }
+
+  async function handleSave() {
+    if (!blurb.trim() || !longDesc.trim() || saving) return;
+    setSaving(true);
+    await onSave(product.id, { blurb, longDesc, category, allergens });
+    setSaving(false);
+    onDone();
+  }
+
+  return (
+    <div className="min-w-[840px] border-t border-ink/10 bg-cream-warm px-6.5 py-5">
+      <div className="grid grid-cols-1 gap-4.5 lg:grid-cols-2">
+        <label className="flex flex-col gap-1.75">
+          <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+            Short description
+          </span>
+          <span className="font-mono text-[12px] text-ink/55">
+            Shown on the menu card and product page eyebrow.
+          </span>
+          <Textarea
+            value={blurb}
+            onChange={(e) => setBlurb(e.target.value)}
+            rows={3}
+          />
+        </label>
+        <label className="flex flex-col gap-1.75">
+          <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+            Full description
+          </span>
+          <span className="font-mono text-[12px] text-ink/55">
+            Shown on the product detail page.
+          </span>
+          <Textarea
+            value={longDesc}
+            onChange={(e) => setLongDesc(e.target.value)}
+            rows={3}
+          />
+        </label>
+      </div>
+
+      <div className="mt-4.5 flex flex-wrap items-center gap-3.5">
+        <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+          Filling
+        </span>
+        <span className="font-mono text-[12px] text-ink/55">
+          Drives the Style filter on the storefront menu.
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {(Object.values(ProductCategory) as ProductCategory[]).map((c) => (
+            <Chip key={c} active={category === c} onClick={() => setCategory(c)}>
+              {CATEGORY_LABELS[c]}
+            </Chip>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-3.5 flex flex-wrap items-center gap-3.5">
+        <span className="text-[13px] tracking-[0.17em] text-ink/70 uppercase">
+          Contains
+        </span>
+        <span className="font-mono text-[12px] text-ink/55">
+          Drives the Free-from filter — leave unchecked for what it doesn&apos;t contain.
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {ALLERGEN_OPTIONS.map((a) => (
+            <Chip key={a} active={allergens.includes(a)} onClick={() => toggleAllergen(a)}>
+              {a}
+            </Chip>
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={saving || !blurb.trim() || !longDesc.trim()}
+        className="mt-4.5 cursor-pointer rounded-sm border-none bg-maroon px-6 py-3.5 text-[14px] tracking-[0.16em] whitespace-nowrap text-cream uppercase disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {saving ? "Saving…" : "Save details"}
+      </button>
     </div>
   );
 }

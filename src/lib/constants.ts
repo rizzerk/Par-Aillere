@@ -32,6 +32,8 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   [ProductCategory.NO_FILLING]: "No filling",
 };
 
+export const ALLERGEN_OPTIONS = ["Gluten", "Dairy", "Egg", "Soy", "Nuts"] as const;
+
 export const ALLERGEN_FREE_OPTIONS = [
   { key: "Nuts", label: "Nut-free" },
   { key: "Dairy", label: "Dairy-free" },

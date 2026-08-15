@@ -154,8 +154,9 @@ async function main() {
     create: { id: "ref", nextRef: 843 },
   });
 
+  const seedDemoData = process.env.SEED_DEMO_DATA === "true";
   const orderCount = await prisma.order.count();
-  if (orderCount === 0) {
+  if (seedDemoData && orderCount === 0) {
     const demoOrders = [
       {
         ref: "CK-0842",
