@@ -10,6 +10,7 @@ import { peso } from "@/lib/format";
 import { CATEGORY_LABELS, ALLERGEN_FREE_OPTIONS, FAQS, CONTACT } from "@/lib/constants";
 import { placeOrder, trackOrder, type TrackOrderResult } from "@/actions/orders";
 import { useCartStore } from "@/store/cart";
+import { scrollToHashLink } from "@/lib/scroll";
 import { ProductCard } from "@/components/ProductCard";
 import { UploadField } from "@/components/UploadField";
 import { SplashSheen } from "@/components/SplashSheen";
@@ -192,12 +193,14 @@ export function StorefrontClient({
           <div className="mt-9 flex items-center gap-3.5">
             <Link
               href="/#menu"
+              onClick={(e) => scrollToHashLink(e, "/#menu")}
               className="rounded-sm bg-cream px-7 py-3.5 text-[15px] tracking-[0.17em] text-maroon uppercase"
             >
               Shop the menu
             </Link>
             <Link
               href="/#about"
+              onClick={(e) => scrollToHashLink(e, "/#about")}
               className="rounded-sm border border-blush/45 px-6 py-3.5 text-[15px] tracking-[0.17em] text-blush uppercase"
             >
               Our story
@@ -337,6 +340,7 @@ export function StorefrontClient({
                     </p>
                     <Link
                       href="/#menu"
+                      onClick={(e) => scrollToHashLink(e, "/#menu")}
                       className="rounded-sm bg-maroon px-5 py-3 text-[14px] whitespace-nowrap text-cream uppercase"
                     >
                       Pick flavours
@@ -839,6 +843,7 @@ export function StorefrontClient({
             </div>
             <Link
               href="/#menu"
+              onClick={(e) => scrollToHashLink(e, "/#menu")}
               className="rounded-sm bg-maroon px-6.5 py-3.5 text-[14px] whitespace-nowrap text-cream uppercase"
             >
               Start an order

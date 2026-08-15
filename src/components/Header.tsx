@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useCartStore, cartCount } from "@/store/cart";
 import { CUSTOMER_NAV } from "@/lib/constants";
 import { SplashSheen } from "@/components/SplashSheen";
+import { scrollToHashLink } from "@/lib/scroll";
 
 export function Header() {
   const items = useCartStore((s) => s.items);
@@ -37,6 +38,7 @@ export function Header() {
               <Link
                 key={n.href}
                 href={`/${n.href}`}
+                onClick={(e) => scrollToHashLink(e, `/${n.href}`)}
                 className="py-2.5 text-sm whitespace-nowrap tracking-[0.16em] text-cream/80 uppercase hover:text-cream"
               >
                 {n.label}
@@ -45,6 +47,7 @@ export function Header() {
           </nav>
           <Link
             href="/#order"
+            onClick={(e) => scrollToHashLink(e, "/#order")}
             className={
               "rounded-full px-4 py-2 text-[13px] tracking-[0.16em] whitespace-nowrap uppercase " +
               (count > 0 ? "bg-cream text-maroon" : "bg-cream/15 text-cream")
@@ -80,7 +83,10 @@ export function Header() {
             <Link
               key={n.href}
               href={`/${n.href}`}
-              onClick={() => setMenuOpen(false)}
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToHashLink(e, `/${n.href}`);
+              }}
               className="border-b border-cream/10 py-3 text-sm tracking-[0.16em] text-cream/80 uppercase last:border-b-0 hover:text-cream"
             >
               {n.label}
