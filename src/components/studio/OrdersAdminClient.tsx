@@ -70,8 +70,8 @@ export function OrdersAdminClient({
         </span>
       </div>
 
-      <div className="mt-5.5 border border-ink/14 bg-cream-card">
-        <div className="grid grid-cols-[1fr_1.3fr_1fr_0.8fr_1fr_0.7fr] gap-4 bg-cream-warm px-6.5 py-4 text-[13px] tracking-[0.18em] text-ink/74 uppercase">
+      <div className="mt-5.5 overflow-x-auto border border-ink/14 bg-cream-card">
+        <div className="grid min-w-[820px] grid-cols-[1fr_1.3fr_1fr_0.8fr_1fr_0.7fr] gap-4 bg-cream-warm px-6.5 py-4 text-[13px] tracking-[0.18em] text-ink/74 uppercase">
           <div>Reference</div>
           <div>Customer</div>
           <div>Order status</div>
@@ -84,7 +84,7 @@ export function OrdersAdminClient({
           return (
             <div
               key={o.id}
-              className="grid grid-cols-[1fr_1.3fr_1fr_0.8fr_1fr_0.7fr] items-center gap-4 border-t border-ink/10 px-6.5 py-4"
+              className="grid min-w-[820px] grid-cols-[1fr_1.3fr_1fr_0.8fr_1fr_0.7fr] items-center gap-4 border-t border-ink/10 px-6.5 py-4"
             >
               <div>
                 <div className="font-mono text-base">{o.ref}</div>

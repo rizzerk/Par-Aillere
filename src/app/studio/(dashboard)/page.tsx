@@ -127,8 +127,8 @@ export default async function DashboardPage() {
           ))}
         </div>
 
-        <div className="border border-ink/14 bg-cream-card">
-          <div className="flex items-baseline justify-between border-b border-ink/12 px-6 py-4.5">
+        <div className="overflow-x-auto border border-ink/14 bg-cream-card">
+          <div className="flex min-w-[360px] items-baseline justify-between border-b border-ink/12 px-6 py-4.5">
             <span className="text-[13px] tracking-[0.24em] text-rust uppercase">
               Latest orders
             </span>
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
               <Link
                 key={o.id}
                 href={`/studio/orders/${o.ref}`}
-                className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-ink/8 px-6 py-4"
+                className="grid min-w-[360px] grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-ink/8 px-6 py-4"
               >
                 <div>
                   <div className="text-lg text-ink">{o.customerName}</div>

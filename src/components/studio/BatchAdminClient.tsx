@@ -145,8 +145,8 @@ export function BatchAdminClient({
           </div>
         </div>
 
-        <div className="border border-ink/14 bg-cream-card">
-          <div className="flex items-baseline justify-between border-b border-ink/12 px-6 py-4.5">
+        <div className="overflow-x-auto border border-ink/14 bg-cream-card">
+          <div className="flex min-w-[420px] items-baseline justify-between border-b border-ink/12 px-6 py-4.5">
             <span className="text-[13px] tracking-[0.24em] text-rust uppercase">
               Stock for this batch
             </span>
@@ -157,7 +157,7 @@ export function BatchAdminClient({
           {products.map((p) => (
             <div
               key={p.id}
-              className="grid grid-cols-[1.6fr_auto_auto] items-center gap-4.5 border-b border-ink/8 px-6 py-3.75"
+              className="grid min-w-[420px] grid-cols-[1.6fr_auto_auto] items-center gap-4.5 border-b border-ink/8 px-6 py-3.75"
             >
               <div>
                 <div className={"text-xl " + (p.active ? "" : "opacity-45")}>{p.name}</div>

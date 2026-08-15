@@ -135,8 +135,8 @@ export function ProductsAdminClient({
         </div>
       )}
 
-      <div className="relative mt-7.5 border border-ink/14 bg-cream-card">
-        <div className="grid grid-cols-[2.1fr_0.9fr_0.9fr_1fr_1.3fr] gap-4.5 bg-cream-warm px-6.5 py-4 text-[13px] tracking-[0.2em] text-ink/74 uppercase">
+      <div className="relative mt-7.5 overflow-x-auto border border-ink/14 bg-cream-card">
+        <div className="grid min-w-[720px] grid-cols-[2.1fr_0.9fr_0.9fr_1fr_1.3fr] gap-4.5 bg-cream-warm px-6.5 py-4 text-[13px] tracking-[0.2em] text-ink/74 uppercase">
           <div>Flavour</div>
           <div>Price</div>
           <div>Stock</div>
@@ -146,7 +146,7 @@ export function ProductsAdminClient({
         {products.map((p) => (
           <div
             key={p.id}
-            className="grid grid-cols-[2.1fr_0.9fr_0.9fr_1fr_1.3fr] items-center gap-4.5 border-t border-ink/10 px-6.5 py-4"
+            className="grid min-w-[720px] grid-cols-[2.1fr_0.9fr_0.9fr_1fr_1.3fr] items-center gap-4.5 border-t border-ink/10 px-6.5 py-4"
           >
             <div className="flex items-center gap-4">
               <div

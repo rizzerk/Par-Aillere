@@ -236,7 +236,7 @@ export function StorefrontClient({
         </div>
       </div>
 
-      <div className="relative mx-auto max-w-6xl overflow-hidden px-6 pt-16 pb-24 sm:px-10">
+      <div id="menu" className="relative mx-auto max-w-6xl overflow-hidden px-6 pt-16 pb-24 sm:px-10">
         <Image
           src="/assets/flower-d.png"
           alt=""
@@ -346,7 +346,7 @@ export function StorefrontClient({
                   cartLines.map((l) => (
                     <div
                       key={l.product.id}
-                      className="grid grid-cols-[56px_1fr_auto_auto_auto] items-center gap-4 border-b border-ink/8 px-6 py-4"
+                      className="grid grid-cols-[56px_1fr] items-center gap-x-4 gap-y-3 border-b border-ink/8 px-4 py-4 sm:grid-cols-[56px_1fr_auto_auto_auto] sm:gap-4 sm:px-6"
                     >
                       <div
                         className="h-14 w-14"
@@ -361,33 +361,35 @@ export function StorefrontClient({
                           {peso(l.product.price)} each · {CATEGORY_LABELS[l.product.category].toLowerCase()}
                         </div>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="col-span-2 flex items-center justify-between gap-3 sm:contents">
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => bump(l.product.id, -1)}
+                            className="h-8 w-8 cursor-pointer border border-ink/25 bg-transparent text-base"
+                          >
+                            −
+                          </button>
+                          <span className="min-w-9 text-center text-lg">{l.qty}</span>
+                          <button
+                            type="button"
+                            onClick={() => bump(l.product.id, 1)}
+                            className="h-8 w-8 cursor-pointer border border-ink/25 bg-transparent text-base"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="text-lg text-rust sm:min-w-20 sm:text-right">
+                          {peso(l.product.price * l.qty)}
+                        </div>
                         <button
                           type="button"
-                          onClick={() => bump(l.product.id, -1)}
-                          className="h-8 w-8 cursor-pointer border border-ink/25 bg-transparent text-base"
+                          onClick={() => removeFromCart(l.product.id)}
+                          className="cursor-pointer bg-transparent px-2 py-2 text-[13px] tracking-[0.15em] text-ink/66 uppercase"
                         >
-                          −
-                        </button>
-                        <span className="min-w-9 text-center text-lg">{l.qty}</span>
-                        <button
-                          type="button"
-                          onClick={() => bump(l.product.id, 1)}
-                          className="h-8 w-8 cursor-pointer border border-ink/25 bg-transparent text-base"
-                        >
-                          +
+                          Remove
                         </button>
                       </div>
-                      <div className="min-w-20 text-right text-lg text-rust">
-                        {peso(l.product.price * l.qty)}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeFromCart(l.product.id)}
-                        className="cursor-pointer bg-transparent px-2 py-2 text-[13px] tracking-[0.15em] text-ink/66 uppercase"
-                      >
-                        Remove
-                      </button>
                     </div>
                   ))
                 )}
@@ -582,7 +584,7 @@ export function StorefrontClient({
               </div>
             </div>
 
-            <div className="sticky top-24 overflow-hidden bg-maroon p-7 text-cream">
+            <div className="order-first overflow-hidden bg-maroon p-7 text-cream lg:sticky lg:top-24 lg:order-none">
               <SplashSheen src="/assets/splash-b.png" />
               <div className="relative">
                 <div className="text-[13px] tracking-[0.32em] text-gold uppercase">
