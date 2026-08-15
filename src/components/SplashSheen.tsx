@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function SplashSheen({ src }: { src: string }) {
   return (
-    <div className="absolute inset-0">
+    <div className="pointer-events-none absolute inset-0">
       <Image
         src={src}
         alt=""

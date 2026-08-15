@@ -588,7 +588,7 @@ export function StorefrontClient({
               </div>
             </div>
 
-            <div className="order-first overflow-hidden bg-maroon p-7 text-cream lg:sticky lg:top-24 lg:order-none">
+            <div className="relative order-first overflow-hidden bg-maroon p-7 text-cream lg:sticky lg:top-24 lg:order-none">
               <SplashSheen src="/assets/splash-b.png" />
               <div className="relative">
                 <div className="text-[13px] tracking-[0.32em] text-gold uppercase">
