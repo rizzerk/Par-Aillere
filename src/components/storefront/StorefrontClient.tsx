@@ -373,11 +373,19 @@ export function StorefrontClient({
                       className="grid grid-cols-[56px_1fr] items-center gap-x-4 gap-y-3 border-b border-ink/8 px-4 py-4 sm:grid-cols-[56px_1fr_auto_auto_auto] sm:gap-4 sm:px-6"
                     >
                       <div
-                        className="h-14 w-14"
-                        style={{
-                          backgroundImage:
-                            "repeating-linear-gradient(135deg, rgba(92,16,21,0.14) 0 6px, rgba(92,16,21,0.04) 6px 12px)",
-                        }}
+                        className="h-14 w-14 flex-none overflow-hidden"
+                        style={
+                          l.product.photoUrl
+                            ? {
+                                backgroundImage: `url(${l.product.photoUrl})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                              }
+                            : {
+                                backgroundImage:
+                                  "repeating-linear-gradient(135deg, rgba(92,16,21,0.14) 0 6px, rgba(92,16,21,0.04) 6px 12px)",
+                              }
+                        }
                       />
                       <div>
                         <div className="text-xl">{l.product.name}</div>
