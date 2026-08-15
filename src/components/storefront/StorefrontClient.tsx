@@ -185,13 +185,13 @@ export function StorefrontClient({
             Baked to order · Cebu City
           </div>
           <h1 className="mt-5 font-serif text-5xl leading-[1.02] font-light lg:text-7xl">
-            Thick, filled cookies
+            Thick, filled treats
             <br />
             <em className="text-blush not-italic italic">made in small batches.</em>
           </h1>
           <p className="mt-6 max-w-md text-lg leading-relaxed font-light text-cream/90">
-            45g of cookie dough before the marshmallow, the oreos, the molten filling.
-            Folded by hand the night before you eat them.
+            Cookies with a molten centre, brownies cut thick and fudgy — folded and baked
+            by hand the night before you eat them.
           </p>
           <div className="mt-9 flex items-center gap-3.5">
             <Link
