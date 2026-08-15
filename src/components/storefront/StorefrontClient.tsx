@@ -194,7 +194,7 @@ export function StorefrontClient({
             by hand the night before you eat them.
           </p>
           <p className="mt-2 max-w-md font-mono text-sm text-cream/60 italic">
-            P.S. — you say it &ldquo;Pah-Ehy-Ehr.&rdquo;
+            P.S. — you say it as &ldquo;Pah-Ehy-Ehr.&rdquo;
           </p>
           <div className="mt-9 flex items-center gap-3.5">
             <Link
