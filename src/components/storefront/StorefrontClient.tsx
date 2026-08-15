@@ -262,7 +262,7 @@ export function StorefrontClient({
 
         <div className="relative mt-7 flex flex-wrap items-center gap-5 border-t border-b border-ink/18 py-4.5">
           <span className="text-[13px] tracking-[0.2em] text-ink/62 uppercase">Type</span>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {(["All", "FILLED", "NO_FILLING"] as const).map((c) => (
               <Chip key={c} active={catFilter === c} onClick={() => setCatFilter(c)}>
                 {c === "All" ? "All" : CATEGORY_LABELS[c]}
@@ -272,7 +272,7 @@ export function StorefrontClient({
           <span className="ml-3 text-[13px] tracking-[0.2em] text-ink/62 uppercase">
             Free from
           </span>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Chip active={freeFilter === "All"} onClick={() => setFreeFilter("All")}>
               All
             </Chip>
@@ -443,7 +443,7 @@ export function StorefrontClient({
                 <div className="text-[13px] tracking-[0.24em] text-rust uppercase">
                   3 — Delivery
                 </div>
-                <div className="mt-4.5 flex gap-2.5">
+                <div className="mt-4.5 flex flex-wrap gap-2.5">
                   <Chip
                     active={form.method === FulfilMethod.PICKUP}
                     onClick={() => setForm((f) => ({ ...f, method: FulfilMethod.PICKUP }))}
@@ -480,7 +480,7 @@ export function StorefrontClient({
                 <div className="text-[13px] tracking-[0.24em] text-rust uppercase">
                   4 — Payment
                 </div>
-                <div className="mt-4.5 flex gap-2.5">
+                <div className="mt-4.5 flex flex-wrap gap-2.5">
                   {(
                     [
                       [PayMethod.GCASH, "GCash"],
@@ -697,7 +697,7 @@ export function StorefrontClient({
 
             {trackState === "found" && trackedOrder && (
               <div className="mt-5 border border-ink/16 bg-cream-card">
-                <div className="flex items-center justify-between gap-5 bg-cream-warm px-6 py-5">
+                <div className="flex flex-wrap items-center justify-between gap-5 bg-cream-warm px-6 py-5">
                   <div>
                     <div className="font-mono text-xl tracking-[0.06em]">
                       {trackedOrder.ref}
@@ -707,7 +707,7 @@ export function StorefrontClient({
                       {trackedOrder.batchCode}
                     </div>
                   </div>
-                  <div className="flex gap-2.5">
+                  <div className="flex flex-wrap gap-2.5">
                     <OrderPill status={trackedOrder.orderStatus} />
                     <PayPill status={trackedOrder.payStatus} />
                   </div>
